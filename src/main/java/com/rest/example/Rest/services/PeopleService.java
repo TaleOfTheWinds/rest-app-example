@@ -4,6 +4,7 @@ import com.rest.example.Rest.dto.PersonDTO;
 import com.rest.example.Rest.mappers.PersonMapper;
 import com.rest.example.Rest.models.Person;
 import com.rest.example.Rest.repositories.PeopleRepository;
+import com.rest.example.Rest.util.exceptions.PersonNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +25,7 @@ public class PeopleService {
     }
 
     public PersonDTO getPerson(int id) {
-        Person person = peopleRepository.findById(id).get();
+        Person person = peopleRepository.findById(id).orElseThrow(PersonNotFoundException::new);
         return PersonMapper.INSTANCE.toDTO(person);
     }
 
@@ -40,7 +41,7 @@ public class PeopleService {
 
     @Transactional
     public void update(PersonDTO personDTO) {
-        Person person = peopleRepository.findById(personDTO.getId()).get();
+        Person person = peopleRepository.findById(personDTO.getId()).orElseThrow(PersonNotFoundException::new);
         PersonMapper.INSTANCE.updateEntity(personDTO, person);
         person.setUpdated_at(LocalDateTime.now());
         peopleRepository.save(person);
@@ -48,6 +49,11 @@ public class PeopleService {
 
     @Transactional
     public void delete(int id) {
+        Person person = peopleRepository.findById(id).orElseThrow(PersonNotFoundException::new);
         peopleRepository.deleteById(id);
+    }
+
+    public Optional<Person> findByEmail(String email) {
+        return peopleRepository.findByEmail(email);
     }
 }
