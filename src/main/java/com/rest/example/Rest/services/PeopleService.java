@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,5 +26,28 @@ public class PeopleService {
     public PersonDTO getPerson(int id) {
         Person person = peopleRepository.findById(id).get();
         return PersonMapper.INSTANCE.toDTO(person);
+    }
+
+    @Transactional
+    public void create(PersonDTO personDTO) {
+        Person person = PersonMapper.INSTANCE.toPerson(personDTO);
+        person.setCreated_at(LocalDateTime.now());
+        person.setUpdated_at(LocalDateTime.now());
+        person.setCreated_who("USER");
+
+        peopleRepository.save(person);
+    }
+
+    @Transactional
+    public void update(PersonDTO personDTO) {
+        Person person = peopleRepository.findById(personDTO.getId()).get();
+        PersonMapper.INSTANCE.updateEntity(personDTO, person);
+        person.setUpdated_at(LocalDateTime.now());
+        peopleRepository.save(person);
+    }
+
+    @Transactional
+    public void delete(int id) {
+        peopleRepository.deleteById(id);
     }
 }

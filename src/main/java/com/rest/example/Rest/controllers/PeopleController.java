@@ -24,14 +24,17 @@ public class PeopleController {
     }
 
     @PostMapping("/create")
-    public void createPerson() {
+    public void createPerson(@RequestBody PersonDTO personDTO) {
+        peopleService.create(personDTO);
     }
 
     @PutMapping("/update")
-    public void updatePerson() {
+    public void updatePerson(@RequestBody PersonDTO personDTO) {
+        peopleService.update(personDTO);
     }
 
-    @DeleteMapping("/detele/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deletePerson(@PathVariable("id") int id) {
+        peopleService.delete(id);
     }
 }

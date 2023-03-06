@@ -2,7 +2,7 @@ package com.rest.example.Rest.mappers;
 
 import com.rest.example.Rest.dto.PersonDTO;
 import com.rest.example.Rest.models.Person;
-import org.mapstruct.Mapper;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -15,4 +15,6 @@ public interface PersonMapper {
     PersonDTO toDTO(Person person);
     List<Person> toPersonList(List<PersonDTO> list);
     List<PersonDTO> toDTOList(List<Person> list);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateEntity(PersonDTO personDTO, @MappingTarget Person person);
 }
