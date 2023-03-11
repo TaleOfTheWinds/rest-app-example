@@ -10,11 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -37,10 +37,6 @@ public class PeopleController {
     @PostMapping("/create")
     public ResponseEntity<PersonDTO> createPerson(@RequestBody @Validated PersonDTO personDTO, BindingResult bindingResult) {
         personDTOValidator.validate(personDTO, bindingResult);
-        if (bindingResult.hasErrors())
-            throw new PersonValidationError(bindingResult.getAllErrors().stream().reduce((err, i) ->
-                            new ObjectError("err", err.getDefaultMessage() + " ~~~ " + i.getDefaultMessage()))
-                    .get().getDefaultMessage());
 
         PersonDTO person = peopleService.create(personDTO);
         return new ResponseEntity<>(person, HttpStatus.CREATED);
@@ -49,10 +45,6 @@ public class PeopleController {
     @PutMapping("/update")
     public ResponseEntity<PersonDTO> updatePerson(@RequestBody @Validated PersonDTO personDTO, BindingResult bindingResult) {
         personDTOValidator.validate(personDTO, bindingResult);
-        if (bindingResult.hasErrors())
-            throw new PersonValidationError(bindingResult.getAllErrors().stream().reduce((err, i) ->
-                            new ObjectError("err", err.getDefaultMessage() + " ~~~ " + i.getDefaultMessage()))
-                    .get().getDefaultMessage());
 
         PersonDTO person = peopleService.update(personDTO);
         return new ResponseEntity<>(person, HttpStatus.ACCEPTED);
@@ -66,12 +58,12 @@ public class PeopleController {
 
     @ExceptionHandler
     public ResponseEntity<PersonErrorResponse> handleException(PersonValidationError e) {
-        return new ResponseEntity<>(new PersonErrorResponse(e.getMessage(), LocalDateTime.now(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new PersonErrorResponse(e.getErrors(), LocalDateTime.now(), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<PersonErrorResponse> handleException(PersonNotFoundException e) {
-        return new ResponseEntity<>(new PersonErrorResponse("Person with this id wasn't found",
+        return new ResponseEntity<>(new PersonErrorResponse(Collections.singletonList("Person with this id wasn't found"),
                 LocalDateTime.now(), HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
     }
 }

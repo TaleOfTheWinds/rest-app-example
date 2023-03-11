@@ -16,12 +16,13 @@ import java.time.LocalDateTime;
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Min(value = 0, message = "Id should be greater than 0")
+    @Min(value = 0, message = "Id should not be negative")
     private int id;
     @NotEmpty(message = "Name should not be empty")
     private String name;
-    @Min(value = 0, message = "Age should be greater than 0")
+    @Min(value = 1, message = "Age should be greater than 0")
     private int age;
+    @NotEmpty(message = "Email should not be empty")
     @Email(message = "Email should be valid")
     private String email;
     private LocalDateTime updated_at;

@@ -3,12 +3,14 @@ package com.rest.example.rest.validators;
 import com.rest.example.rest.dto.PersonDTO;
 import com.rest.example.rest.models.Person;
 import com.rest.example.rest.services.PeopleService;
+import com.rest.example.rest.util.exceptions.PersonValidationError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
@@ -29,5 +31,11 @@ public class PersonDTOValidator implements Validator {
                 errors.rejectValue("email", "", "Person with this email already exists");
         }
 
+        if (errors.hasErrors()) {
+            PersonValidationError error = new PersonValidationError();
+            error.setErrors(errors.getFieldErrors().stream()
+                    .map(e -> e.getDefaultMessage()).collect(Collectors.toList()));
+            throw error;
+        }
     }
 }

@@ -6,12 +6,13 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @Getter
 @Setter
 public class PersonErrorResponse {
-    private String message;
+    private List<String> errors;
     private LocalDateTime timestamp;
     private HttpStatus statusCode;
 }
