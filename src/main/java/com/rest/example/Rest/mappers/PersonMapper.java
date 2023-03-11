@@ -13,7 +13,6 @@ public interface PersonMapper {
 
     Person toPerson(PersonDTO personDTO);
     PersonDTO toDTO(Person person);
-    List<Person> toPersonList(List<PersonDTO> list);
     List<PersonDTO> toDTOList(List<Person> list);
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntity(PersonDTO personDTO, @MappingTarget Person person);

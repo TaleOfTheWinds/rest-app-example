@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/people")
@@ -37,6 +38,12 @@ public class PeopleController {
     @PostMapping("/create")
     public ResponseEntity<PersonDTO> createPerson(@RequestBody @Validated PersonDTO personDTO, BindingResult bindingResult) {
         personDTOValidator.validate(personDTO, bindingResult);
+        if (bindingResult.hasErrors()) {
+            PersonValidationError error = new PersonValidationError();
+            error.setErrors(bindingResult.getFieldErrors().stream()
+                    .map(e -> e.getDefaultMessage()).collect(Collectors.toList()));
+            throw error;
+        }
 
         PersonDTO person = peopleService.create(personDTO);
         return new ResponseEntity<>(person, HttpStatus.CREATED);
@@ -45,6 +52,12 @@ public class PeopleController {
     @PutMapping("/update")
     public ResponseEntity<PersonDTO> updatePerson(@RequestBody @Validated PersonDTO personDTO, BindingResult bindingResult) {
         personDTOValidator.validate(personDTO, bindingResult);
+        if (bindingResult.hasErrors()) {
+            PersonValidationError error = new PersonValidationError();
+            error.setErrors(bindingResult.getFieldErrors().stream()
+                    .map(e -> e.getDefaultMessage()).collect(Collectors.toList()));
+            throw error;
+        }
 
         PersonDTO person = peopleService.update(personDTO);
         return new ResponseEntity<>(person, HttpStatus.ACCEPTED);
