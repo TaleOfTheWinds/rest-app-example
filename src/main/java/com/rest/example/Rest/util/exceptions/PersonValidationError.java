@@ -1,4 +1,4 @@
-package com.rest.example.Rest.util.exceptions;
+package com.rest.example.rest.util.exceptions;
 
 public class PersonValidationError extends RuntimeException{
     public PersonValidationError(String message) {

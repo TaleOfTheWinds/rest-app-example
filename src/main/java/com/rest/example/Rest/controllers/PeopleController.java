@@ -1,11 +1,11 @@
-package com.rest.example.Rest.controllers;
+package com.rest.example.rest.controllers;
 
-import com.rest.example.Rest.dto.PersonDTO;
-import com.rest.example.Rest.services.PeopleService;
-import com.rest.example.Rest.util.exceptions.PersonErrorResponse;
-import com.rest.example.Rest.util.exceptions.PersonNotFoundException;
-import com.rest.example.Rest.util.exceptions.PersonValidationError;
-import com.rest.example.Rest.validators.PersonDTOValidator;
+import com.rest.example.rest.dto.PersonDTO;
+import com.rest.example.rest.services.PeopleService;
+import com.rest.example.rest.util.exceptions.PersonErrorResponse;
+import com.rest.example.rest.util.exceptions.PersonNotFoundException;
+import com.rest.example.rest.util.exceptions.PersonValidationError;
+import com.rest.example.rest.validators.PersonDTOValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,36 +30,38 @@ public class PeopleController {
     }
 
     @GetMapping("/{id}")
-    public PersonDTO getPerson(@PathVariable("id") int id) {
-        return peopleService.getPerson(id);
+    public PersonDTO getPersonById(@PathVariable("id") int id) {
+        return peopleService.getPersonById(id);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createPerson(@RequestBody @Validated PersonDTO personDTO, BindingResult bindingResult) {
+    public ResponseEntity<PersonDTO> createPerson(@RequestBody @Validated PersonDTO personDTO, BindingResult bindingResult) {
         personDTOValidator.validate(personDTO, bindingResult);
         if (bindingResult.hasErrors())
             throw new PersonValidationError(bindingResult.getAllErrors().stream().reduce((err, i) ->
                             new ObjectError("err", err.getDefaultMessage() + " ~~~ " + i.getDefaultMessage()))
                     .get().getDefaultMessage());
-        peopleService.create(personDTO);
-        return new ResponseEntity<>("Person created successfully", HttpStatus.CREATED);
+
+        PersonDTO person = peopleService.create(personDTO);
+        return new ResponseEntity<>(person, HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updatePerson(@RequestBody @Validated PersonDTO personDTO, BindingResult bindingResult) {
+    public ResponseEntity<PersonDTO> updatePerson(@RequestBody @Validated PersonDTO personDTO, BindingResult bindingResult) {
         personDTOValidator.validate(personDTO, bindingResult);
         if (bindingResult.hasErrors())
             throw new PersonValidationError(bindingResult.getAllErrors().stream().reduce((err, i) ->
                             new ObjectError("err", err.getDefaultMessage() + " ~~~ " + i.getDefaultMessage()))
                     .get().getDefaultMessage());
-        peopleService.update(personDTO);
-        return new ResponseEntity<>("Person updated successfully", HttpStatus.ACCEPTED);
+
+        PersonDTO person = peopleService.update(personDTO);
+        return new ResponseEntity<>(person, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deletePerson(@PathVariable("id") int id) {
+    public ResponseEntity<HttpStatus> deletePerson(@PathVariable("id") int id) {
         peopleService.delete(id);
-        return new ResponseEntity<>("Person deleted successfully", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @ExceptionHandler

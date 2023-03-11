@@ -1,13 +1,11 @@
-package com.rest.example.Rest.validators;
+package com.rest.example.rest.validators;
 
-import com.rest.example.Rest.dto.PersonDTO;
-import com.rest.example.Rest.models.Person;
-import com.rest.example.Rest.services.PeopleService;
-import com.rest.example.Rest.util.exceptions.PersonValidationError;
+import com.rest.example.rest.dto.PersonDTO;
+import com.rest.example.rest.models.Person;
+import com.rest.example.rest.services.PeopleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 
 import java.util.Optional;

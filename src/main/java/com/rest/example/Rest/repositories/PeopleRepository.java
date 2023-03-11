@@ -1,6 +1,6 @@
-package com.rest.example.Rest.repositories;
+package com.rest.example.rest.repositories;
 
-import com.rest.example.Rest.models.Person;
+import com.rest.example.rest.models.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

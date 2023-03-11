@@ -1,4 +1,4 @@
-package com.rest.example.Rest.util.exceptions;
+package com.rest.example.rest.util.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

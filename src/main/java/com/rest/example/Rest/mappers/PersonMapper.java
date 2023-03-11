@@ -1,7 +1,7 @@
-package com.rest.example.Rest.mappers;
+package com.rest.example.rest.mappers;
 
-import com.rest.example.Rest.dto.PersonDTO;
-import com.rest.example.Rest.models.Person;
+import com.rest.example.rest.dto.PersonDTO;
+import com.rest.example.rest.models.Person;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
